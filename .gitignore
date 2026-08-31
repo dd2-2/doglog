@@ -1,0 +1,24 @@
+# Flutter/Dart
+.dart_tool/
+.packages
+build/
+*.g.dart
+*.freezed.dart
+
+# Android/iOS/etc — flutter create로 CI에서 매번 새로 생성, 커밋하지 않음
+android/
+ios/
+linux/
+macos/
+windows/
+web/
+
+# IDE
+.idea/
+*.iml
+
+# 로컬 개발 시 flutter create로 생성되는 잡파일
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+pubspec.lock
