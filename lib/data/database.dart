@@ -153,6 +153,8 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> addWeight(WeightRecordsCompanion entry) => into(weightRecords).insert(entry);
 
+  Future<bool> updateWeight(WeightRecord entry) => update(weightRecords).replace(entry);
+
   Future<void> deleteWeight(int id) =>
       (delete(weightRecords)..where((t) => t.id.equals(id))).go();
 
@@ -163,6 +165,8 @@ class AppDatabase extends _$AppDatabase {
       .watch();
 
   Future<int> addHealthLog(HealthLogsCompanion entry) => into(healthLogs).insert(entry);
+
+  Future<bool> updateHealthLog(HealthLog entry) => update(healthLogs).replace(entry);
 
   Future<void> deleteHealthLog(int id) =>
       (delete(healthLogs)..where((t) => t.id.equals(id))).go();

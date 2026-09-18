@@ -37,16 +37,33 @@ class HealthScreen extends ConsumerWidget {
             children: [
               const Text('체중 변화', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
               TextButton.icon(
-                onPressed: () => _showAddWeightSheet(context, ref, dog.id),
+                onPressed: () => _showWeightSheet(context, ref, dog.id),
                 icon: const Icon(Icons.add, size: 18),
                 label: const Text('기록'),
               ),
             ],
           ),
           weights.when(
-            data: (list) => list.isEmpty
-                ? const _MiniEmpty(text: '체중 기록이 없어요')
-                : _WeightChart(records: list),
+            data: (list) {
+              if (list.isEmpty) return const _MiniEmpty(text: '체중 기록이 없어요');
+              if (list.length == 1) {
+                return _SingleWeight(
+                  record: list.first,
+                  onEdit: () => _showWeightSheet(context, ref, dog.id, existing: list.first),
+                );
+              }
+              return Column(
+                children: [
+                  _WeightChart(records: list),
+                  const SizedBox(height: 8),
+                  for (final w in list.reversed)
+                    _WeightTile(
+                      record: w,
+                      onEdit: () => _showWeightSheet(context, ref, dog.id, existing: w),
+                    ),
+                ],
+              );
+            },
             loading: () => const SizedBox(),
             error: (_, __) => const SizedBox(),
           ),
@@ -56,7 +73,7 @@ class HealthScreen extends ConsumerWidget {
             children: [
               const Text('건강 기록', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
               TextButton.icon(
-                onPressed: () => _showAddLogSheet(context, ref, dog.id),
+                onPressed: () => _showLogSheet(context, ref, dog.id),
                 icon: const Icon(Icons.add, size: 18),
                 label: const Text('기록'),
               ),
@@ -66,11 +83,70 @@ class HealthScreen extends ConsumerWidget {
           logs.when(
             data: (list) => list.isEmpty
                 ? const _MiniEmpty(text: '병원 방문/투약 기록이 없어요')
-                : Column(children: [for (final l in list) _HealthLogTile(log: l)]),
+                : Column(children: [
+                    for (final l in list)
+                      _HealthLogTile(
+                        log: l,
+                        onEdit: () => _showLogSheet(context, ref, dog.id, existing: l),
+                      ),
+                  ]),
             loading: () => const SizedBox(),
             error: (_, __) => const SizedBox(),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SingleWeight extends StatelessWidget {
+  const _SingleWeight({required this.record, required this.onEdit});
+
+  final WeightRecord record;
+  final VoidCallback onEdit;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onDoubleTap: onEdit,
+      child: SoftCard(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${record.weightKg} kg',
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+              ),
+              Text(
+                DateFormat('yyyy.MM.dd').format(record.date),
+                style: const TextStyle(color: AppColors.inkLight),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WeightTile extends StatelessWidget {
+  const _WeightTile({required this.record, required this.onEdit});
+
+  final WeightRecord record;
+  final VoidCallback onEdit;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onDoubleTap: onEdit,
+      child: SoftCard(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: ListTile(
+          title: Text('${record.weightKg} kg'),
+          subtitle: Text(DateFormat('yyyy.MM.dd').format(record.date)),
+        ),
       ),
     );
   }
@@ -98,6 +174,8 @@ class _WeightChart extends StatelessWidget {
           height: 180,
           child: LineChart(
             LineChartData(
+              minX: -0.3,
+              maxX: (recent.length - 1) + 0.3,
               minY: (minY - pad).clamp(0, double.infinity),
               maxY: maxY + pad,
               gridData: const FlGridData(show: false),
@@ -132,23 +210,27 @@ class _WeightChart extends StatelessWidget {
 }
 
 class _HealthLogTile extends StatelessWidget {
-  const _HealthLogTile({required this.log});
+  const _HealthLogTile({required this.log, required this.onEdit});
 
   final HealthLog log;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
-    return SoftCard(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: AppColors.mint.withValues(alpha: 0.18),
-          child: const Icon(Icons.medical_services_outlined, color: AppColors.ink, size: 18),
+    return GestureDetector(
+      onDoubleTap: onEdit,
+      child: SoftCard(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: AppColors.mint.withValues(alpha: 0.18),
+            child: const Icon(Icons.medical_services_outlined, color: AppColors.ink, size: 18),
+          ),
+          title: Text(log.title),
+          subtitle: Text('${log.type.label} · ${DateFormat('yyyy.MM.dd').format(log.date)}'
+              '${log.memo != null && log.memo!.isNotEmpty ? '\n${log.memo}' : ''}'),
+          isThreeLine: log.memo != null && log.memo!.isNotEmpty,
         ),
-        title: Text(log.title),
-        subtitle: Text('${log.type.label} · ${DateFormat('yyyy.MM.dd').format(log.date)}'
-            '${log.memo != null && log.memo!.isNotEmpty ? '\n${log.memo}' : ''}'),
-        isThreeLine: log.memo != null && log.memo!.isNotEmpty,
       ),
     );
   }
@@ -168,9 +250,16 @@ class _MiniEmpty extends StatelessWidget {
   }
 }
 
-Future<void> _showAddWeightSheet(BuildContext context, WidgetRef ref, int dogId) {
-  final weightCtrl = TextEditingController();
-  DateTime date = DateTime.now();
+Future<void> _showWeightSheet(
+  BuildContext context,
+  WidgetRef ref,
+  int dogId, {
+  WeightRecord? existing,
+}) {
+  final weightCtrl = TextEditingController(
+    text: existing != null ? existing.weightKg.toString() : '',
+  );
+  DateTime date = existing?.date ?? DateTime.now();
 
   return showModalBottomSheet(
     context: context,
@@ -187,8 +276,23 @@ Future<void> _showAddWeightSheet(BuildContext context, WidgetRef ref, int dogId)
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('체중 기록 추가', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(existing == null ? '체중 기록 추가' : '체중 기록 수정',
+                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                if (existing != null)
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () async {
+                      final db = ref.read(databaseProvider);
+                      await db.deleteWeight(existing.id);
+                      if (ctx.mounted) Navigator.of(ctx).pop();
+                    },
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
             TextField(
               controller: weightCtrl,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -218,16 +322,20 @@ Future<void> _showAddWeightSheet(BuildContext context, WidgetRef ref, int dogId)
                 final w = double.tryParse(weightCtrl.text.trim());
                 if (w == null) return;
                 final db = ref.read(databaseProvider);
-                await db.addWeight(WeightRecordsCompanion.insert(
-                  dogId: dogId,
-                  date: date,
-                  weightKg: w,
-                ));
+                if (existing == null) {
+                  await db.addWeight(WeightRecordsCompanion.insert(
+                    dogId: dogId,
+                    date: date,
+                    weightKg: w,
+                  ));
+                } else {
+                  await db.updateWeight(existing.copyWith(date: date, weightKg: w));
+                }
                 if (ctx.mounted) Navigator.of(ctx).pop();
               },
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 4),
-                child: Text('추가', textAlign: TextAlign.center),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text(existing == null ? '추가' : '저장', textAlign: TextAlign.center),
               ),
             ),
           ],
@@ -237,11 +345,16 @@ Future<void> _showAddWeightSheet(BuildContext context, WidgetRef ref, int dogId)
   );
 }
 
-Future<void> _showAddLogSheet(BuildContext context, WidgetRef ref, int dogId) {
-  final titleCtrl = TextEditingController();
-  final memoCtrl = TextEditingController();
-  HealthLogType type = HealthLogType.vetVisit;
-  DateTime date = DateTime.now();
+Future<void> _showLogSheet(
+  BuildContext context,
+  WidgetRef ref,
+  int dogId, {
+  HealthLog? existing,
+}) {
+  final titleCtrl = TextEditingController(text: existing?.title ?? '');
+  final memoCtrl = TextEditingController(text: existing?.memo ?? '');
+  HealthLogType type = existing?.type ?? HealthLogType.vetVisit;
+  DateTime date = existing?.date ?? DateTime.now();
 
   return showModalBottomSheet(
     context: context,
@@ -258,8 +371,23 @@ Future<void> _showAddLogSheet(BuildContext context, WidgetRef ref, int dogId) {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('건강 기록 추가', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(existing == null ? '건강 기록 추가' : '건강 기록 수정',
+                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                if (existing != null)
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () async {
+                      final db = ref.read(databaseProvider);
+                      await db.deleteHealthLog(existing.id);
+                      if (ctx.mounted) Navigator.of(ctx).pop();
+                    },
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
             DropdownButtonFormField<HealthLogType>(
               value: type,
               decoration: const InputDecoration(labelText: '종류'),
@@ -305,18 +433,28 @@ Future<void> _showAddLogSheet(BuildContext context, WidgetRef ref, int dogId) {
                 final title = titleCtrl.text.trim();
                 if (title.isEmpty) return;
                 final db = ref.read(databaseProvider);
-                await db.addHealthLog(HealthLogsCompanion.insert(
-                  dogId: dogId,
-                  date: date,
-                  type: type,
-                  title: title,
-                  memo: Value(memoCtrl.text.trim().isEmpty ? null : memoCtrl.text.trim()),
-                ));
+                final memo = memoCtrl.text.trim();
+                if (existing == null) {
+                  await db.addHealthLog(HealthLogsCompanion.insert(
+                    dogId: dogId,
+                    date: date,
+                    type: type,
+                    title: title,
+                    memo: Value(memo.isEmpty ? null : memo),
+                  ));
+                } else {
+                  await db.updateHealthLog(existing.copyWith(
+                    date: date,
+                    type: type,
+                    title: title,
+                    memo: Value(memo.isEmpty ? null : memo),
+                  ));
+                }
                 if (ctx.mounted) Navigator.of(ctx).pop();
               },
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 4),
-                child: Text('추가', textAlign: TextAlign.center),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text(existing == null ? '추가' : '저장', textAlign: TextAlign.center),
               ),
             ),
           ],
