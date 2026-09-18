@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
-/// 브랜드 팔레트: 따뜻한 크림 배경 + 코랄 포인트 컬러
+/// 브랜드 팔레트: 완전한 화이트 대신 은은한 페이퍼 톤 배경 + 소프트 그림자 카드 + 코랄 포인트
 class AppColors {
-  static const cream = Color(0xFFFFF8F1);
-  static const coral = Color(0xFFFF8A65);
-  static const coralDark = Color(0xFFE8734F);
-  static const mint = Color(0xFF6FCF97);
-  static const ink = Color(0xFF3A3A3A);
-  static const inkLight = Color(0xFF8A8A8A);
-  static const cardBg = Color(0xFFFFFFFF);
-  static const divider = Color(0xFFF0E6DC);
+  static const paper = Color(0xFFEEEBE6);
+  static const cardBg = Color(0xFFFBFAF7);
+  static const coral = Color(0xFFE8896B);
+  static const coralDark = Color(0xFFD1734F);
+  static const mint = Color(0xFF7FB89A);
+  static const ink = Color(0xFF3D3B37);
+  static const inkLight = Color(0xFF8D897F);
+  static const divider = Color(0xFFE3DFD6);
+  static const shadow = Color(0x1F2E2B24);
 }
 
 class AppTheme {
@@ -20,14 +21,14 @@ class AppTheme {
         seedColor: AppColors.coral,
         brightness: Brightness.light,
         primary: AppColors.coral,
-        surface: AppColors.cream,
+        surface: AppColors.paper,
       ),
-      scaffoldBackgroundColor: AppColors.cream,
+      scaffoldBackgroundColor: AppColors.paper,
     );
 
     return base.copyWith(
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.cream,
+        backgroundColor: AppColors.paper,
         foregroundColor: AppColors.ink,
         elevation: 0,
         centerTitle: false,
@@ -39,7 +40,9 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: AppColors.cardBg,
-        elevation: 0,
+        elevation: 3,
+        shadowColor: AppColors.shadow,
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -48,7 +51,9 @@ class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AppColors.cardBg,
         indicatorColor: AppColors.coral.withValues(alpha: 0.15),
-        elevation: 0,
+        elevation: 4,
+        shadowColor: AppColors.shadow,
+        surfaceTintColor: Colors.transparent,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
           return TextStyle(
