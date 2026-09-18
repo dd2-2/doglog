@@ -281,15 +281,38 @@ Future<void> _showWeightSheet(
               children: [
                 Text(existing == null ? '체중 기록 추가' : '체중 기록 수정',
                     style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
-                if (existing != null)
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline),
-                    onPressed: () async {
-                      final db = ref.read(databaseProvider);
-                      await db.deleteWeight(existing.id);
-                      if (ctx.mounted) Navigator.of(ctx).pop();
-                    },
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (existing != null)
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline),
+                        onPressed: () async {
+                          final db = ref.read(databaseProvider);
+                          await db.deleteWeight(existing.id);
+                          if (ctx.mounted) Navigator.of(ctx).pop();
+                        },
+                      ),
+                    TextButton(
+                      onPressed: () async {
+                        final w = double.tryParse(weightCtrl.text.trim());
+                        if (w == null) return;
+                        final db = ref.read(databaseProvider);
+                        if (existing == null) {
+                          await db.addWeight(WeightRecordsCompanion.insert(
+                            dogId: dogId,
+                            date: date,
+                            weightKg: w,
+                          ));
+                        } else {
+                          await db.updateWeight(existing.copyWith(date: date, weightKg: w));
+                        }
+                        if (ctx.mounted) Navigator.of(ctx).pop();
+                      },
+                      child: Text(existing == null ? '추가' : '저장'),
+                    ),
+                  ],
+                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -314,28 +337,6 @@ Future<void> _showWeightSheet(
               child: InputDecorator(
                 decoration: const InputDecoration(labelText: '날짜'),
                 child: Text(DateFormat('yyyy.MM.dd').format(date)),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final w = double.tryParse(weightCtrl.text.trim());
-                if (w == null) return;
-                final db = ref.read(databaseProvider);
-                if (existing == null) {
-                  await db.addWeight(WeightRecordsCompanion.insert(
-                    dogId: dogId,
-                    date: date,
-                    weightKg: w,
-                  ));
-                } else {
-                  await db.updateWeight(existing.copyWith(date: date, weightKg: w));
-                }
-                if (ctx.mounted) Navigator.of(ctx).pop();
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Text(existing == null ? '추가' : '저장', textAlign: TextAlign.center),
               ),
             ),
           ],
@@ -376,15 +377,46 @@ Future<void> _showLogSheet(
               children: [
                 Text(existing == null ? '건강 기록 추가' : '건강 기록 수정',
                     style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
-                if (existing != null)
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline),
-                    onPressed: () async {
-                      final db = ref.read(databaseProvider);
-                      await db.deleteHealthLog(existing.id);
-                      if (ctx.mounted) Navigator.of(ctx).pop();
-                    },
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (existing != null)
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline),
+                        onPressed: () async {
+                          final db = ref.read(databaseProvider);
+                          await db.deleteHealthLog(existing.id);
+                          if (ctx.mounted) Navigator.of(ctx).pop();
+                        },
+                      ),
+                    TextButton(
+                      onPressed: () async {
+                        final title = titleCtrl.text.trim();
+                        if (title.isEmpty) return;
+                        final db = ref.read(databaseProvider);
+                        final memo = memoCtrl.text.trim();
+                        if (existing == null) {
+                          await db.addHealthLog(HealthLogsCompanion.insert(
+                            dogId: dogId,
+                            date: date,
+                            type: type,
+                            title: title,
+                            memo: Value(memo.isEmpty ? null : memo),
+                          ));
+                        } else {
+                          await db.updateHealthLog(existing.copyWith(
+                            date: date,
+                            type: type,
+                            title: title,
+                            memo: Value(memo.isEmpty ? null : memo),
+                          ));
+                        }
+                        if (ctx.mounted) Navigator.of(ctx).pop();
+                      },
+                      child: Text(existing == null ? '추가' : '저장'),
+                    ),
+                  ],
+                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -426,36 +458,6 @@ Future<void> _showLogSheet(
               controller: memoCtrl,
               decoration: const InputDecoration(labelText: '메모 (선택)'),
               maxLines: 2,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final title = titleCtrl.text.trim();
-                if (title.isEmpty) return;
-                final db = ref.read(databaseProvider);
-                final memo = memoCtrl.text.trim();
-                if (existing == null) {
-                  await db.addHealthLog(HealthLogsCompanion.insert(
-                    dogId: dogId,
-                    date: date,
-                    type: type,
-                    title: title,
-                    memo: Value(memo.isEmpty ? null : memo),
-                  ));
-                } else {
-                  await db.updateHealthLog(existing.copyWith(
-                    date: date,
-                    type: type,
-                    title: title,
-                    memo: Value(memo.isEmpty ? null : memo),
-                  ));
-                }
-                if (ctx.mounted) Navigator.of(ctx).pop();
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Text(existing == null ? '추가' : '저장', textAlign: TextAlign.center),
-              ),
             ),
           ],
         ),
