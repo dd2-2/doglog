@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-/// 브랜드 팔레트: 완전한 화이트 대신 중립 그레이 페이퍼 톤 배경 + 이중 그림자(뉴모피즘) 카드 + 절제된 코랄 포인트
+/// 브랜드 팔레트: 클리어한 화이트 배경 + 세련된 블랙 포인트, 카드는 얇은 보더 + 미니멀 그림자
 class AppColors {
-  static const paper = Color(0xFFE4E4E1);
-  static const cardBg = Color(0xFFF2F1EE);
-  static const coral = Color(0xFFBF8770);
-  static const coralDark = Color(0xFFA5715C);
-  static const mint = Color(0xFF8FAA9B);
-  static const ink = Color(0xFF332F2A);
-  static const inkLight = Color(0xFF87847D);
-  static const divider = Color(0xFFD7D5D0);
-  static const shadow = Color(0x1F2A2620);
+  static const paper = Color(0xFFFFFFFF);
+  static const cardBg = Color(0xFFFFFFFF);
+  static const coral = Color(0xFF1A1A1A);
+  static const coralDark = Color(0xFF000000);
+  static const mint = Color(0xFF2B2B2B);
+  static const ink = Color(0xFF141414);
+  static const inkLight = Color(0xFF8E8E93);
+  static const divider = Color(0xFFE7E7E7);
+  static const shadow = Color(0x14000000);
 }
 
 class AppTheme {
@@ -43,13 +43,14 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: AppColors.divider),
         ),
         margin: EdgeInsets.zero,
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AppColors.cardBg,
-        indicatorColor: AppColors.coral.withValues(alpha: 0.15),
-        elevation: 4,
+        indicatorColor: AppColors.coral.withValues(alpha: 0.08),
+        elevation: 0,
         shadowColor: AppColors.shadow,
         surfaceTintColor: Colors.transparent,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
@@ -76,8 +77,7 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.coral,
           foregroundColor: Colors.white,
-          elevation: 2,
-          shadowColor: AppColors.shadow,
+          elevation: 0,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28),
@@ -87,7 +87,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.cardBg,
+        fillColor: const Color(0xFFF7F7F7),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
           borderSide: BorderSide.none,

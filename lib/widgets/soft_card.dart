@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 
-/// Card를 대체하는 뉴모피즘(소프트 UI) 스타일 컨테이너.
-/// 밝은 하이라이트(좌상단) + 어두운 그림자(우하단)를 동시에 줘서
-/// 배경 위에 살짝 볼록하게 떠있는 느낌을 만든다.
+/// Card를 대체하는 클리어한 화이트 카드: 얇은 보더 + 미니멀한 단일 그림자로 깔끔하게 구분.
 class SoftCard extends StatelessWidget {
   const SoftCard({super.key, required this.child, this.margin});
 
@@ -18,16 +16,12 @@ class SoftCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.divider),
         boxShadow: [
           BoxShadow(
-            color: Colors.white.withValues(alpha: 0.9),
-            offset: const Offset(-6, -6),
-            blurRadius: 14,
-          ),
-          BoxShadow(
-            color: AppColors.ink.withValues(alpha: 0.14),
-            offset: const Offset(6, 6),
-            blurRadius: 14,
+            color: AppColors.ink.withValues(alpha: 0.05),
+            offset: const Offset(0, 3),
+            blurRadius: 10,
           ),
         ],
       ),

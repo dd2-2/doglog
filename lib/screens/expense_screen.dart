@@ -12,11 +12,11 @@ import '../widgets/empty_state.dart';
 import '../widgets/soft_card.dart';
 
 const _categoryColors = {
-  ExpenseCategory.vet: Color(0xFFBF8770),
-  ExpenseCategory.food: Color(0xFF8FAA9B),
-  ExpenseCategory.grooming: Color(0xFFC9AC7C),
-  ExpenseCategory.supplies: Color(0xFF8CA3B0),
-  ExpenseCategory.other: Color(0xFFA6A29A),
+  ExpenseCategory.vet: Color(0xFF141414),
+  ExpenseCategory.food: Color(0xFF4D4D4D),
+  ExpenseCategory.grooming: Color(0xFF7A7A7A),
+  ExpenseCategory.supplies: Color(0xFFA6A6A6),
+  ExpenseCategory.other: Color(0xFFD1D1D1),
 };
 
 class ExpenseScreen extends ConsumerWidget {
