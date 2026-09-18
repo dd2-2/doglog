@@ -10,6 +10,7 @@ import '../providers/record_providers.dart';
 import '../theme/app_theme.dart';
 import '../widgets/dog_selector.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/soft_card.dart';
 import 'dog_form_screen.dart';
 import 'settings_screen.dart';
 
@@ -89,7 +90,7 @@ class _HomeBody extends ConsumerWidget {
         expenses.when(
           data: (list) {
             final total = list.fold<double>(0, (sum, e) => sum + e.amount);
-            return Card(
+            return SoftCard(
               child: Padding(
                 padding: const EdgeInsets.all(18),
                 child: Row(
@@ -116,7 +117,7 @@ class _HomeBody extends ConsumerWidget {
     final age = dog.birthDate != null
         ? (DateTime.now().difference(dog.birthDate!).inDays / 365).floor()
         : null;
-    return Card(
+    return SoftCard(
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Row(
@@ -168,7 +169,7 @@ class _ScheduleTile extends StatelessWidget {
     final days = due.difference(today).inDays;
     final dDay = days == 0 ? 'D-Day' : (days > 0 ? 'D-$days' : 'D+${-days}');
 
-    return Card(
+    return SoftCard(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(

@@ -9,6 +9,7 @@ import '../providers/record_providers.dart';
 import '../services/notification_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/soft_card.dart';
 import 'schedule_form_screen.dart';
 
 class ScheduleScreen extends ConsumerStatefulWidget {
@@ -114,7 +115,7 @@ class _ScheduleCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
+    return SoftCard(
       child: ListTile(
         leading: Checkbox(
           value: false,

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/database_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/soft_card.dart';
 import 'dog_form_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -24,7 +25,7 @@ class SettingsScreen extends ConsumerWidget {
                 separatorBuilder: (_, __) => const SizedBox(height: 8),
                 itemBuilder: (context, i) {
                   final dog = dogs[i];
-                  return Card(
+                  return SoftCard(
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundColor: AppColors.coral.withValues(alpha: 0.15),

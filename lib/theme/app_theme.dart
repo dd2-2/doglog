@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-/// 브랜드 팔레트: 완전한 화이트 대신 중립 그레이 페이퍼 톤 배경 + 소프트 그림자 카드 + 코랄 포인트
+/// 브랜드 팔레트: 완전한 화이트 대신 중립 그레이 페이퍼 톤 배경 + 이중 그림자(뉴모피즘) 카드 + 절제된 코랄 포인트
 class AppColors {
-  static const paper = Color(0xFFE7E6E2);
-  static const cardBg = Color(0xFFF5F4F1);
-  static const coral = Color(0xFFCE8064);
-  static const coralDark = Color(0xFFB56A50);
-  static const mint = Color(0xFF7FB89A);
-  static const ink = Color(0xFF37352F);
-  static const inkLight = Color(0xFF89877F);
-  static const divider = Color(0xFFDAD8D2);
-  static const shadow = Color(0x24292620);
+  static const paper = Color(0xFFE4E4E1);
+  static const cardBg = Color(0xFFF2F1EE);
+  static const coral = Color(0xFFBF8770);
+  static const coralDark = Color(0xFFA5715C);
+  static const mint = Color(0xFF8FAA9B);
+  static const ink = Color(0xFF332F2A);
+  static const inkLight = Color(0xFF87847D);
+  static const divider = Color(0xFFD7D5D0);
+  static const shadow = Color(0x1F2A2620);
 }
 
 class AppTheme {
@@ -40,9 +40,7 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: AppColors.cardBg,
-        elevation: 3,
-        shadowColor: AppColors.shadow,
-        surfaceTintColor: Colors.transparent,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -78,10 +76,11 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.coral,
           foregroundColor: Colors.white,
-          elevation: 0,
+          elevation: 2,
+          shadowColor: AppColors.shadow,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(28),
           ),
           textStyle: const TextStyle(fontWeight: FontWeight.w700),
         ),
@@ -90,7 +89,7 @@ class AppTheme {
         filled: true,
         fillColor: AppColors.cardBg,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(18),
           borderSide: BorderSide.none,
         ),
         contentPadding:

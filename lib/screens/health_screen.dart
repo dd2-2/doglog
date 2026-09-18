@@ -9,6 +9,7 @@ import '../providers/database_provider.dart';
 import '../providers/record_providers.dart';
 import '../theme/app_theme.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/soft_card.dart';
 
 class HealthScreen extends ConsumerWidget {
   const HealthScreen({super.key});
@@ -90,7 +91,7 @@ class _WeightChart extends StatelessWidget {
     final maxY = recent.map((e) => e.weightKg).reduce((a, b) => a > b ? a : b);
     final pad = (maxY - minY).abs() < 1 ? 1.0 : (maxY - minY) * 0.2;
 
-    return Card(
+    return SoftCard(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 20, 20, 12),
         child: SizedBox(
@@ -137,7 +138,7 @@ class _HealthLogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return SoftCard(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(

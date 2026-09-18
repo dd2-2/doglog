@@ -9,13 +9,14 @@ import '../providers/database_provider.dart';
 import '../providers/record_providers.dart';
 import '../theme/app_theme.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/soft_card.dart';
 
 const _categoryColors = {
-  ExpenseCategory.vet: Color(0xFFFF8A65),
-  ExpenseCategory.food: Color(0xFF6FCF97),
-  ExpenseCategory.grooming: Color(0xFFFFC069),
-  ExpenseCategory.supplies: Color(0xFF64B5F6),
-  ExpenseCategory.other: Color(0xFFB0A8B9),
+  ExpenseCategory.vet: Color(0xFFBF8770),
+  ExpenseCategory.food: Color(0xFF8FAA9B),
+  ExpenseCategory.grooming: Color(0xFFC9AC7C),
+  ExpenseCategory.supplies: Color(0xFF8CA3B0),
+  ExpenseCategory.other: Color(0xFFA6A29A),
 };
 
 class ExpenseScreen extends ConsumerWidget {
@@ -95,7 +96,7 @@ class _ExpenseBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       children: [
-        Card(
+        SoftCard(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -167,7 +168,7 @@ class _ExpenseTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
+    return SoftCard(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(
