@@ -14,6 +14,9 @@ class NotificationService {
   Future<void> init() async {
     if (_initialized) return;
     tzdata.initializeTimeZones();
+    // tz.local을 설정하지 않으면 zonedSchedule 호출 시 예외가 발생해 일정 저장 자체가
+    // 항상 실패하는 버그가 있었음. 이 앱은 한국어 전용이라 서울 기준으로 고정.
+    tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
 
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
     const initSettings = InitializationSettings(android: androidInit);

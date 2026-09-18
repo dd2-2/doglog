@@ -52,30 +52,33 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
 
           return Column(
             children: [
-              TableCalendar<ScheduleItem>(
-                firstDay: DateTime.now().subtract(const Duration(days: 365)),
-                lastDay: DateTime.now().add(const Duration(days: 730)),
-                focusedDay: _focusedDay,
-                selectedDayPredicate: (day) =>
-                    _selectedDay != null && isSameDay(_selectedDay, day),
-                eventLoader: (day) => eventsByDay[_dateOnly(day)] ?? [],
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                },
-                calendarStyle: const CalendarStyle(
-                  todayDecoration: BoxDecoration(
-                      color: Color(0x33FF8A65), shape: BoxShape.circle),
-                  selectedDecoration:
-                      BoxDecoration(color: AppColors.coral, shape: BoxShape.circle),
-                  markerDecoration:
-                      BoxDecoration(color: AppColors.mint, shape: BoxShape.circle),
-                ),
-                headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
+              GestureDetector(
+                onDoubleTap: () => _openForm(context, dog),
+                child: TableCalendar<ScheduleItem>(
+                  firstDay: DateTime.now().subtract(const Duration(days: 365)),
+                  lastDay: DateTime.now().add(const Duration(days: 730)),
+                  focusedDay: _focusedDay,
+                  selectedDayPredicate: (day) =>
+                      _selectedDay != null && isSameDay(_selectedDay, day),
+                  eventLoader: (day) => eventsByDay[_dateOnly(day)] ?? [],
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                  },
+                  calendarStyle: const CalendarStyle(
+                    todayDecoration: BoxDecoration(
+                        color: Color(0x33141414), shape: BoxShape.circle),
+                    selectedDecoration:
+                        BoxDecoration(color: AppColors.coral, shape: BoxShape.circle),
+                    markerDecoration:
+                        BoxDecoration(color: AppColors.mint, shape: BoxShape.circle),
+                  ),
+                  headerStyle: const HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                  ),
                 ),
               ),
               const Divider(height: 1),
@@ -98,10 +101,19 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
         error: (_, __) => const SizedBox(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => ScheduleFormScreen(dog: dog)),
-        ),
+        onPressed: () => _openForm(context, dog),
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _openForm(BuildContext context, Dog dog) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ScheduleFormScreen(
+          dog: dog,
+          initialDate: _selectedDay ?? _focusedDay,
+        ),
       ),
     );
   }
@@ -138,7 +150,6 @@ class _ScheduleCard extends ConsumerWidget {
         title: Text(item.title),
         subtitle: Text(
           [
-            item.type.label,
             DateFormat('yyyy.MM.dd').format(item.nextDueDate),
             if (item.intervalDays != null) '${item.intervalDays}일마다 반복',
           ].join(' · '),
