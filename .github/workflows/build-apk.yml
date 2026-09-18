@@ -21,7 +21,9 @@ jobs:
           channel: stable
 
       - name: Generate Android platform scaffold
-        run: flutter create --platforms=android --org com.doglog --project-name doglog .
+        run: |
+          flutter create --platforms=android --org com.doglog --project-name doglog /tmp/doglog_scaffold
+          cp -r /tmp/doglog_scaffold/android .
 
       - name: Patch AndroidManifest for local notifications
         run: python3 .github/scripts/patch_manifest.py android/app/src/main/AndroidManifest.xml
