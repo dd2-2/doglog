@@ -63,30 +63,30 @@ class _ScheduleFormScreenState extends ConsumerState<ScheduleFormScreen> {
     final interval = int.tryParse(_intervalCtrl.text.trim());
     final title = _titleCtrl.text.trim();
 
-    int scheduleId;
-    if (widget.existing == null) {
-      scheduleId = await db.addSchedule(ScheduleItemsCompanion.insert(
-        dogId: widget.dog.id,
-        type: _type,
-        title: title,
-        nextDueDate: _dueDate,
-        intervalDays: Value(interval),
-        memo: Value(_memoCtrl.text.trim().isEmpty ? null : _memoCtrl.text.trim()),
-        notifyEnabled: Value(_notifyEnabled),
-      ));
-    } else {
-      scheduleId = widget.existing!.id;
-      await db.updateSchedule(widget.existing!.copyWith(
-        type: _type,
-        title: title,
-        nextDueDate: _dueDate,
-        intervalDays: Value(interval),
-        memo: Value(_memoCtrl.text.trim().isEmpty ? null : _memoCtrl.text.trim()),
-        notifyEnabled: _notifyEnabled,
-      ));
-    }
-
     try {
+      int scheduleId;
+      if (widget.existing == null) {
+        scheduleId = await db.addSchedule(ScheduleItemsCompanion.insert(
+          dogId: widget.dog.id,
+          type: _type,
+          title: title,
+          nextDueDate: _dueDate,
+          intervalDays: Value(interval),
+          memo: Value(_memoCtrl.text.trim().isEmpty ? null : _memoCtrl.text.trim()),
+          notifyEnabled: Value(_notifyEnabled),
+        ));
+      } else {
+        scheduleId = widget.existing!.id;
+        await db.updateSchedule(widget.existing!.copyWith(
+          type: _type,
+          title: title,
+          nextDueDate: _dueDate,
+          intervalDays: Value(interval),
+          memo: Value(_memoCtrl.text.trim().isEmpty ? null : _memoCtrl.text.trim()),
+          notifyEnabled: _notifyEnabled,
+        ));
+      }
+
       if (_notifyEnabled) {
         await NotificationService.instance.scheduleForItem(
           scheduleId: scheduleId,
@@ -97,8 +97,13 @@ class _ScheduleFormScreenState extends ConsumerState<ScheduleFormScreen> {
       } else {
         await NotificationService.instance.cancel(scheduleId);
       }
-    } catch (_) {
-      // 알림 예약 실패는 저장 자체를 막지 않음
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('저장에 실패했습니다. 다시 시도해주세요.')),
+        );
+      }
+      return;
     }
 
     if (mounted) Navigator.of(context).pop();
