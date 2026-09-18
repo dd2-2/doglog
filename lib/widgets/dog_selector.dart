@@ -37,7 +37,7 @@ class DogSelector extends ConsumerWidget {
               ),
             ActionChip(
               avatar: const Icon(Icons.add, size: 18),
-              label: const Text('반려견 추가'),
+              label: const Text('반려동물 추가'),
               onPressed: onAddDog,
               backgroundColor: AppColors.cardBg,
               shape: RoundedRectangleBorder(

@@ -89,7 +89,7 @@ class _DogFormScreenState extends ConsumerState<DogFormScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('반려견 삭제'),
+        title: const Text('반려동물 삭제'),
         content: Text('${widget.existing!.name}의 모든 일정/건강/지출 기록도 함께 삭제됩니다.'),
         actions: [
           TextButton(
@@ -112,7 +112,7 @@ class _DogFormScreenState extends ConsumerState<DogFormScreen> {
     final isEdit = widget.existing != null;
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEdit ? '반려견 정보 수정' : '반려견 등록'),
+        title: Text(isEdit ? '반려동물 정보 수정' : '반려동물 등록'),
         actions: [
           if (isEdit)
             IconButton(

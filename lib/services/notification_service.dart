@@ -50,7 +50,7 @@ class NotificationService {
         android: AndroidNotificationDetails(
           'doglog_schedule',
           '일정 알림',
-          channelDescription: '반려견 일정(예방접종/구충/목욕/미용 등) 리마인더',
+          channelDescription: '반려동물 일정(예방접종/구충/목욕/미용 등) 리마인더',
           importance: Importance.high,
           priority: Priority.high,
         ),

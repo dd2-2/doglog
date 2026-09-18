@@ -27,7 +27,7 @@ class ExpenseScreen extends ConsumerWidget {
     if (dog == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('지출')),
-        body: const EmptyState(icon: Icons.savings, message: '먼저 홈에서 반려견을 등록해주세요'),
+        body: const EmptyState(icon: Icons.savings, message: '먼저 홈에서 반려동물을 등록해주세요'),
       );
     }
 

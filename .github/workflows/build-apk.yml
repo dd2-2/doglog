@@ -22,8 +22,8 @@ jobs:
 
       - name: Generate Android platform scaffold
         run: |
-          flutter create --platforms=android --org com.doglog --project-name doglog /tmp/doglog_scaffold
-          cp -r /tmp/doglog_scaffold/android .
+          flutter create --platforms=android --org com.petlog --project-name petlog /tmp/petlog_scaffold
+          cp -r /tmp/petlog_scaffold/android .
 
       - name: Patch AndroidManifest for local notifications
         run: python3 .github/scripts/patch_manifest.py android/app/src/main/AndroidManifest.xml
@@ -40,5 +40,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: doglog-apk
+          name: petlog-apk
           path: build/app/outputs/flutter-apk/app-release.apk

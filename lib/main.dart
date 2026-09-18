@@ -21,7 +21,7 @@ class DoglogApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '강아지 관리수첩',
+      title: 'petlog',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       locale: const Locale('ko'),

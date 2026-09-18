@@ -86,15 +86,19 @@ class _ScheduleFormScreenState extends ConsumerState<ScheduleFormScreen> {
       ));
     }
 
-    if (_notifyEnabled) {
-      await NotificationService.instance.scheduleForItem(
-        scheduleId: scheduleId,
-        dogName: widget.dog.name,
-        title: title,
-        dueDate: _dueDate,
-      );
-    } else {
-      await NotificationService.instance.cancel(scheduleId);
+    try {
+      if (_notifyEnabled) {
+        await NotificationService.instance.scheduleForItem(
+          scheduleId: scheduleId,
+          dogName: widget.dog.name,
+          title: title,
+          dueDate: _dueDate,
+        );
+      } else {
+        await NotificationService.instance.cancel(scheduleId);
+      }
+    } catch (_) {
+      // 알림 예약 실패는 저장 자체를 막지 않음
     }
 
     if (mounted) Navigator.of(context).pop();

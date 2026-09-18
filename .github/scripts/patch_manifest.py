@@ -19,7 +19,7 @@ if "POST_NOTIFICATIONS" not in content:
 
 content = re.sub(
     r'android:label="[^"]*"',
-    'android:label="강아지 관리수첩"',
+    'android:label="petlog"',
     content,
     count=1,
 )

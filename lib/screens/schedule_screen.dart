@@ -31,7 +31,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     if (dog == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('일정')),
-        body: const EmptyState(icon: Icons.event_note, message: '먼저 홈에서 반려견을 등록해주세요'),
+        body: const EmptyState(icon: Icons.event_note, message: '먼저 홈에서 반려동물을 등록해주세요'),
       );
     }
 

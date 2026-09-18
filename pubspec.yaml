@@ -1,5 +1,5 @@
-name: doglog
-description: "강아지 관리수첩 - 반려견 일정/건강/지출 관리"
+name: petlog
+description: "petlog - 반려동물 일정/건강/지출 관리"
 publish_to: 'none'
 version: 1.0.0+1
 

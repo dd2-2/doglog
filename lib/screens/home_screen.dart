@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +22,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('강아지 관리수첩'),
+        title: const Text('petlog'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
@@ -43,8 +45,8 @@ class HomeScreen extends ConsumerWidget {
             child: dog == null
                 ? EmptyState(
                     icon: Icons.pets,
-                    message: '등록된 반려견이 없어요.\n먼저 반려견을 등록해주세요.',
-                    actionLabel: '반려견 등록',
+                    message: '등록된 반려동물이 없어요.\n먼저 반려동물을 등록해주세요.',
+                    actionLabel: '반려동물 등록',
                     onAction: () => Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => const DogFormScreen()),
                     ),
@@ -122,7 +124,11 @@ class _HomeBody extends ConsumerWidget {
             CircleAvatar(
               radius: 32,
               backgroundColor: AppColors.coral.withValues(alpha: 0.15),
-              child: const Icon(Icons.pets, color: AppColors.coralDark, size: 28),
+              backgroundImage:
+                  dog.photoPath != null ? FileImage(File(dog.photoPath!)) : null,
+              child: dog.photoPath == null
+                  ? const Icon(Icons.pets, color: AppColors.coralDark, size: 28)
+                  : null,
             ),
             const SizedBox(width: 16),
             Expanded(

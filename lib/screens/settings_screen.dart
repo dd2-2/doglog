@@ -14,10 +14,10 @@ class SettingsScreen extends ConsumerWidget {
     final dogsAsync = ref.watch(dogsStreamProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('반려견 관리')),
+      appBar: AppBar(title: const Text('반려동물 관리')),
       body: dogsAsync.when(
         data: (dogs) => dogs.isEmpty
-            ? const EmptyState(icon: Icons.pets, message: '등록된 반려견이 없어요')
+            ? const EmptyState(icon: Icons.pets, message: '등록된 반려동물이 없어요')
             : ListView.separated(
                 padding: const EdgeInsets.all(16),
                 itemCount: dogs.length,
@@ -48,7 +48,7 @@ class SettingsScreen extends ConsumerWidget {
           MaterialPageRoute(builder: (_) => const DogFormScreen()),
         ),
         icon: const Icon(Icons.add),
-        label: const Text('반려견 추가'),
+        label: const Text('반려동물 추가'),
       ),
     );
   }
