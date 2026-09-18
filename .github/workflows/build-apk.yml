@@ -28,6 +28,9 @@ jobs:
       - name: Patch AndroidManifest for local notifications
         run: python3 .github/scripts/patch_manifest.py android/app/src/main/AndroidManifest.xml
 
+      - name: Patch build.gradle for core library desugaring
+        run: python3 .github/scripts/patch_gradle.py android/app
+
       - run: flutter pub get
 
       - name: Generate drift database code
