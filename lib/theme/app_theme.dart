@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-/// 브랜드 팔레트: 완전한 화이트 대신 은은한 페이퍼 톤 배경 + 소프트 그림자 카드 + 코랄 포인트
+/// 브랜드 팔레트: 완전한 화이트 대신 중립 그레이 페이퍼 톤 배경 + 소프트 그림자 카드 + 코랄 포인트
 class AppColors {
-  static const paper = Color(0xFFEEEBE6);
-  static const cardBg = Color(0xFFFBFAF7);
-  static const coral = Color(0xFFE8896B);
-  static const coralDark = Color(0xFFD1734F);
+  static const paper = Color(0xFFE7E6E2);
+  static const cardBg = Color(0xFFF5F4F1);
+  static const coral = Color(0xFFCE8064);
+  static const coralDark = Color(0xFFB56A50);
   static const mint = Color(0xFF7FB89A);
-  static const ink = Color(0xFF3D3B37);
-  static const inkLight = Color(0xFF8D897F);
-  static const divider = Color(0xFFE3DFD6);
-  static const shadow = Color(0x1F2E2B24);
+  static const ink = Color(0xFF37352F);
+  static const inkLight = Color(0xFF89877F);
+  static const divider = Color(0xFFDAD8D2);
+  static const shadow = Color(0x24292620);
 }
 
 class AppTheme {
