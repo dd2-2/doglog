@@ -168,7 +168,7 @@ class _WeightChart extends StatelessWidget {
     ];
     final rawMin = recent.map((e) => e.weightKg).reduce((a, b) => a < b ? a : b);
     final rawMax = recent.map((e) => e.weightKg).reduce((a, b) => a > b ? a : b);
-    final pad = (rawMax - rawMin).abs() < 1 ? 1.0 : (rawMax - rawMin) * 0.2;
+    final pad = ((rawMax - rawMin) * 0.3).clamp(0.2, double.infinity);
 
     // 축 라벨이 interval과 어긋나면 fl_chart가 경계값(minY/maxY)을 별도로 한 번 더 그려서
     // 인접 라벨과 겹치는 문제가 있었음 → min/max/간격을 전부 step의 배수로 맞춤
