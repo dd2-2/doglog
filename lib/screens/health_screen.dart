@@ -11,6 +11,9 @@ import '../theme/app_theme.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/soft_card.dart';
 
+/// 소수점 부동소수점 오차(예: 5.6000000000000005)를 없애고 1자리로 통일해서 표시
+String _fmtKg(double kg) => '${kg.toStringAsFixed(1)} kg';
+
 class HealthScreen extends ConsumerWidget {
   const HealthScreen({super.key});
 
@@ -116,7 +119,7 @@ class _SingleWeight extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${record.weightKg} kg',
+                _fmtKg(record.weightKg),
                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
               ),
               Text(
@@ -144,7 +147,7 @@ class _WeightTile extends StatelessWidget {
       child: SoftCard(
         margin: const EdgeInsets.only(bottom: 8),
         child: ListTile(
-          title: Text('${record.weightKg} kg'),
+          title: Text(_fmtKg(record.weightKg)),
           subtitle: Text(DateFormat('yyyy.MM.dd').format(record.date)),
         ),
       ),
@@ -163,9 +166,17 @@ class _WeightChart extends StatelessWidget {
     final spots = [
       for (var i = 0; i < recent.length; i++) FlSpot(i.toDouble(), recent[i].weightKg),
     ];
-    final minY = recent.map((e) => e.weightKg).reduce((a, b) => a < b ? a : b);
-    final maxY = recent.map((e) => e.weightKg).reduce((a, b) => a > b ? a : b);
-    final pad = (maxY - minY).abs() < 1 ? 1.0 : (maxY - minY) * 0.2;
+    final rawMin = recent.map((e) => e.weightKg).reduce((a, b) => a < b ? a : b);
+    final rawMax = recent.map((e) => e.weightKg).reduce((a, b) => a > b ? a : b);
+    final pad = (rawMax - rawMin).abs() < 1 ? 1.0 : (rawMax - rawMin) * 0.2;
+
+    // 축 라벨이 interval과 어긋나면 fl_chart가 경계값(minY/maxY)을 별도로 한 번 더 그려서
+    // 인접 라벨과 겹치는 문제가 있었음 → min/max/간격을 전부 step의 배수로 맞춤
+    const steps = [0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0];
+    final rawRange = (rawMax + pad) - (rawMin - pad);
+    final step = steps.firstWhere((s) => rawRange / 4 <= s, orElse: () => 50.0);
+    final minY = ((rawMin - pad) / step).floor() * step;
+    final maxY = ((rawMax + pad) / step).ceil() * step;
 
     return SoftCard(
       child: Padding(
@@ -176,16 +187,24 @@ class _WeightChart extends StatelessWidget {
             LineChartData(
               minX: -0.3,
               maxX: (recent.length - 1) + 0.3,
-              minY: (minY - pad).clamp(0, double.infinity),
-              maxY: maxY + pad,
+              minY: minY.clamp(0, double.infinity),
+              maxY: maxY,
               gridData: const FlGridData(show: false),
               borderData: FlBorderData(show: false),
-              titlesData: const FlTitlesData(
-                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              titlesData: FlTitlesData(
+                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                bottomTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 leftTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: true, reservedSize: 34),
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 34,
+                    interval: step,
+                    getTitlesWidget: (value, meta) => Text(
+                      step < 1 ? value.toStringAsFixed(1) : value.toStringAsFixed(0),
+                      style: const TextStyle(fontSize: 11, color: AppColors.inkLight),
+                    ),
+                  ),
                 ),
               ),
               lineBarsData: [
@@ -257,7 +276,7 @@ Future<void> _showWeightSheet(
   WeightRecord? existing,
 }) {
   final weightCtrl = TextEditingController(
-    text: existing != null ? existing.weightKg.toString() : '',
+    text: existing != null ? existing.weightKg.toStringAsFixed(1) : '',
   );
   DateTime date = existing?.date ?? DateTime.now();
 

@@ -54,12 +54,12 @@ class MockAppDatabase implements PetlogDb {
     ];
 
     _weights.items = [
-      for (var i = 0; i < 5; i++)
+      for (final (i, w) in const [5.2, 5.3, 5.4, 5.5, 5.6].indexed)
         WeightRecord(
           id: _nextWeightId++,
           dogId: dogId,
           date: now.subtract(Duration(days: (4 - i) * 14)),
-          weightKg: 5.2 + i * 0.1,
+          weightKg: w,
         ),
     ];
 
