@@ -29,7 +29,13 @@ class MockAppDatabase implements PetlogDb {
     final now = DateTime.now();
     final dogId = _nextDogId++;
     _dogs.items = [
-      Dog(id: dogId, name: '초코', breed: '포메라니안', birthDate: DateTime(now.year - 3, 3, 15)),
+      Dog(
+        id: dogId,
+        name: '맹구',
+        breed: '골든리트리버',
+        birthDate: DateTime(now.year - 3, 3, 15),
+        photoPath: 'asset:assets/demo/mangu.jpg',
+      ),
     ];
 
     _schedules.items = [
