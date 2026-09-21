@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +8,7 @@ import '../providers/record_providers.dart';
 import '../theme/app_theme.dart';
 import '../widgets/dog_selector.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/photo_image.dart';
 import '../widgets/soft_card.dart';
 import 'dog_form_screen.dart';
 import 'settings_screen.dart';
@@ -126,7 +125,7 @@ class _HomeBody extends ConsumerWidget {
               radius: 32,
               backgroundColor: AppColors.coral.withValues(alpha: 0.15),
               backgroundImage:
-                  dog.photoPath != null ? FileImage(File(dog.photoPath!)) : null,
+                  dog.photoPath != null ? photoImageProvider(dog.photoPath!) : null,
               child: dog.photoPath == null
                   ? const Icon(Icons.pets, color: AppColors.coralDark, size: 28)
                   : null,

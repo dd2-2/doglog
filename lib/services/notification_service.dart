@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
@@ -12,7 +13,7 @@ class NotificationService {
   bool _initialized = false;
 
   Future<void> init() async {
-    if (_initialized) return;
+    if (_initialized || kIsWeb) return;
     tzdata.initializeTimeZones();
     // tz.local을 설정하지 않으면 zonedSchedule 호출 시 예외가 발생해 일정 저장 자체가
     // 항상 실패하는 버그가 있었음. 이 앱은 한국어 전용이라 서울 기준으로 고정.
@@ -36,6 +37,7 @@ class NotificationService {
     required String title,
     required DateTime dueDate,
   }) async {
+    if (kIsWeb) return;
     await cancel(scheduleId);
 
     final scheduledDate = tz.TZDateTime.from(
@@ -64,5 +66,5 @@ class NotificationService {
     );
   }
 
-  Future<void> cancel(int scheduleId) => _plugin.cancel(scheduleId);
+  Future<void> cancel(int scheduleId) => kIsWeb ? Future.value() : _plugin.cancel(scheduleId);
 }

@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/database.dart';
+import '../data/mock_database.dart';
+import '../data/petlog_db.dart';
 
-final databaseProvider = Provider<AppDatabase>((ref) {
-  final db = AppDatabase();
+final databaseProvider = Provider<PetlogDb>((ref) {
+  final db = kIsWeb ? MockAppDatabase() : AppDatabase();
   ref.onDispose(db.close);
   return db;
 });

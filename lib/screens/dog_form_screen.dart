@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../data/database.dart';
 import '../providers/database_provider.dart';
 import '../theme/app_theme.dart';
+import '../widgets/photo_image.dart';
 
 class DogFormScreen extends ConsumerStatefulWidget {
   const DogFormScreen({super.key, this.existing});
@@ -133,7 +132,7 @@ class _DogFormScreenState extends ConsumerState<DogFormScreen> {
                   radius: 48,
                   backgroundColor: AppColors.coral.withValues(alpha: 0.15),
                   backgroundImage:
-                      _photoPath != null ? FileImage(File(_photoPath!)) : null,
+                      _photoPath != null ? photoImageProvider(_photoPath!) : null,
                   child: _photoPath == null
                       ? const Icon(Icons.add_a_photo_outlined,
                           size: 28, color: AppColors.coralDark)

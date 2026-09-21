@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/database.dart';
 import '../providers/database_provider.dart';
 import '../theme/app_theme.dart';
+import 'photo_image.dart';
 
 /// 상단 반려견 선택/전환 칩 목록. 다견 지원의 핵심 UI.
 class DogSelector extends ConsumerWidget {
@@ -74,7 +73,7 @@ class _DogChip extends StatelessWidget {
         radius: 12,
         backgroundColor: AppColors.coral.withValues(alpha: 0.15),
         backgroundImage:
-            dog.photoPath != null ? FileImage(File(dog.photoPath!)) : null,
+            dog.photoPath != null ? photoImageProvider(dog.photoPath!) : null,
         child: dog.photoPath == null
             ? const Icon(Icons.pets, size: 14, color: AppColors.coralDark)
             : null,
