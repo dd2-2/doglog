@@ -18,11 +18,10 @@ class DogSelector extends ConsumerWidget {
     final selectedId = ref.watch(selectedDogProvider)?.id;
 
     return dogsAsync.when(
-      data: (dogs) => SizedBox(
-        height: 44,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+      data: (dogs) => SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: Row(
           children: [
             for (final dog in dogs)
               Padding(
